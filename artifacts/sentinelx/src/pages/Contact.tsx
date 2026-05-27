@@ -4,23 +4,40 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Mail, MessageSquare, Bug, Lightbulb, CheckCircle2, Shield } from "lucide-react";
+import { Mail, MessageSquare, Bug, Lightbulb, CheckCircle2, Shield, Loader2 } from "lucide-react";
 import { SiGithub, SiDiscord, SiX } from "react-icons/si";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [form, setForm] = useState({ name: "", email: "", subject: "feedback", message: "" });
+  const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!form.name || !form.email || !form.message) {
+      toast({ title: "Please fill all required fields", variant: "destructive" });
+      return;
+    }
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error("Submission failed");
       setIsSuccess(true);
-      setTimeout(() => setIsSuccess(false), 5000);
-    }, 1500);
+      setForm({ name: "", email: "", subject: "feedback", message: "" });
+      setTimeout(() => setIsSuccess(false), 6000);
+    } catch {
+      toast({ title: "Failed to send message. Please try again.", variant: "destructive" });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -28,14 +45,14 @@ export default function Contact() {
       <div className="p-8 pb-20 max-w-6xl mx-auto">
         <div className="mb-12">
           <h1 className="text-3xl font-bold font-display text-white">Contact & Feedback</h1>
-          <p className="text-muted-foreground font-mono text-sm mt-1">Connect with the SentinelX security team.</p>
+          <p className="text-muted-foreground font-mono text-sm mt-1">Connect with the SentinelX security team. All messages are stored securely.</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 relative">
             <AnimatePresence>
               {isSuccess && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0 }}
@@ -45,7 +62,7 @@ export default function Contact() {
                     <CheckCircle2 className="w-10 h-10 text-emerald-500" />
                   </div>
                   <h3 className="text-2xl font-bold font-display text-white mb-2">Message Transmitted</h3>
-                  <p className="text-muted-foreground">Our team has received your communication and will respond shortly.</p>
+                  <p className="text-muted-foreground">Your message has been saved. Our team will respond shortly.</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -59,19 +76,23 @@ export default function Contact() {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-white font-mono uppercase tracking-wider">Operator Name</label>
-                      <Input required placeholder="John Doe" className="bg-black/50 border-white/10 focus-visible:border-primary focus-visible:ring-primary/20" />
+                      <label className="text-sm font-medium text-white font-mono uppercase tracking-wider">Operator Name *</label>
+                      <Input data-testid="input-contact-name" required placeholder="John Doe"
+                        className="bg-black/50 border-white/10 focus-visible:border-primary"
+                        value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-white font-mono uppercase tracking-wider">Comms Address (Email)</label>
-                      <Input required type="email" placeholder="john@example.com" className="bg-black/50 border-white/10 focus-visible:border-primary focus-visible:ring-primary/20" />
+                      <label className="text-sm font-medium text-white font-mono uppercase tracking-wider">Email Address *</label>
+                      <Input data-testid="input-contact-email" required type="email" placeholder="john@example.com"
+                        className="bg-black/50 border-white/10 focus-visible:border-primary"
+                        value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-white font-mono uppercase tracking-wider">Subject Classification</label>
-                    <Select required defaultValue="feedback">
-                      <SelectTrigger className="bg-black/50 border-white/10 focus-visible:border-primary focus-visible:ring-primary/20">
+                    <Select value={form.subject} onValueChange={(v) => setForm({ ...form, subject: v })}>
+                      <SelectTrigger data-testid="select-contact-subject" className="bg-black/50 border-white/10 focus-visible:border-primary">
                         <SelectValue placeholder="Select subject" />
                       </SelectTrigger>
                       <SelectContent>
@@ -84,12 +105,17 @@ export default function Contact() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-white font-mono uppercase tracking-wider">Payload (Message)</label>
-                    <Textarea required placeholder="Enter message details here..." className="h-40 bg-black/50 border-white/10 focus-visible:border-primary focus-visible:ring-primary/20" />
+                    <label className="text-sm font-medium text-white font-mono uppercase tracking-wider">Message *</label>
+                    <Textarea data-testid="input-contact-message" required placeholder="Enter message details here..."
+                      className="h-40 bg-black/50 border-white/10 focus-visible:border-primary"
+                      value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} />
                   </div>
 
-                  <Button type="submit" disabled={isSubmitting} className="w-full h-12 bg-primary text-primary-foreground hover:bg-primary/90 font-bold font-mono uppercase tracking-widest text-sm shadow-[0_0_15px_rgba(0,245,255,0.3)]">
-                    {isSubmitting ? "Encrypting and Transmitting..." : "Transmit Message"}
+                  <Button data-testid="button-contact-submit" type="submit" disabled={isSubmitting}
+                    className="w-full h-12 bg-primary text-primary-foreground hover:bg-primary/90 font-bold font-mono uppercase tracking-widest text-sm shadow-[0_0_15px_rgba(0,245,255,0.3)]">
+                    {isSubmitting
+                      ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Transmitting...</>
+                      : "Transmit Message"}
                   </Button>
                 </form>
               </CardContent>

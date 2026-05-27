@@ -14,6 +14,7 @@ import Community from "@/pages/Community";
 import Admin from "@/pages/Admin";
 import About from "@/pages/About";
 import Contact from "@/pages/Contact";
+import ScanHistory from "@/pages/History";
 
 import { ChatBot } from "@/components/chatbot/ChatBot";
 import { LoadingScreen } from "@/components/loading/LoadingScreen";
@@ -33,6 +34,7 @@ function Router() {
       <Route path="/admin" component={Admin} />
       <Route path="/about" component={About} />
       <Route path="/contact" component={Contact} />
+      <Route path="/history" component={ScanHistory} />
       <Route component={NotFound} />
     </Switch>
   );
