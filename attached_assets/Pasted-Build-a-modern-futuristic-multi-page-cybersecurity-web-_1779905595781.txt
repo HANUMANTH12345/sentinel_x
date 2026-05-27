@@ -1,0 +1,361 @@
+Build a modern, futuristic, multi-page cybersecurity web platform called “SentinelX”.
+
+The platform is an AI-powered phishing detection, sandbox analysis, and threat intelligence system.
+
+The website should look like an enterprise-grade cybersecurity dashboard used by modern SOC teams, but still visually attractive and interactive for students and project demonstrations.
+
+====================================================
+GENERAL DESIGN STYLE
+====================================================
+
+Theme:
+- Dark cyberpunk-inspired UI
+- Neon blue, purple, cyan highlights
+- Glassmorphism + modern card-based design
+- Smooth animations
+- Interactive hover effects
+- Animated gradients
+- Subtle grid/background motion
+- Premium startup-level appearance
+
+Visual inspiration:
+- CrowdStrike
+- Cloudflare
+- SentinelOne
+- Nord Security
+- Cyberpunk dashboards
+
+Typography:
+- Modern clean sans-serif
+- Large bold hero titles
+- Minimal but premium spacing
+
+The website must be:
+- Fully responsive
+- Mobile friendly
+- Smooth scrolling
+- Animated transitions between sections/pages
+- Modern loading animations
+- Professionally aligned UI
+
+====================================================
+WEBSITE STRUCTURE
+====================================================
+
+Create a complete multi-page website with the following pages:
+
+1. Landing Page
+2. Live Threat Dashboard
+3. URL Sandbox Analyzer
+4. QR Scam Detector
+5. Threat Intelligence Center
+6. Community Reports Page
+7. Admin Analytics Panel
+8. About Project Page
+9. Contact / Feedback Page
+
+====================================================
+1. LANDING PAGE
+====================================================
+
+Hero Section:
+- Large animated heading:
+  “AI-Powered Cyber Threat Defense Platform”
+- Subheading explaining:
+  phishing detection,
+  sandbox analysis,
+  QR scam prevention,
+  malware intelligence
+
+Add:
+- Animated globe/network background
+- Floating cyber particles
+- Real-time fake threat counters
+- “Analyze Now” CTA button
+- “View Live Threats” button
+
+Sections on landing page:
+
+A. Features Section
+Cards with icons for:
+- URL Sandbox Analysis
+- QR Scam Detection
+- Malware Behavior Tracking
+- Live Traffic Monitoring
+- Threat Intelligence Graphs
+- Browser Protection
+- AI Risk Explanation
+
+B. Live Threat Feed
+Fake real-time scrolling feed showing:
+- malicious domains detected
+- phishing attempts blocked
+- suspicious IP addresses
+
+C. Statistics Section
+Animated counters:
+- Threats Blocked
+- URLs Analyzed
+- QR Scams Prevented
+- Malware Samples Detected
+
+D. Architecture Visualization
+Animated diagram showing:
+User → Sandbox → Analysis Engine → Threat Intelligence DB → Dashboard
+
+E. Testimonials Section
+Modern glass cards with fake cybersecurity analyst reviews.
+
+F. Footer
+Links to all pages, social icons, GitHub, project documentation.
+
+====================================================
+2. LIVE THREAT DASHBOARD PAGE
+====================================================
+
+Purpose:
+A real-time cybersecurity operations center dashboard.
+
+Layout:
+- Sidebar navigation
+- Top navbar with notifications
+- Dark dashboard UI
+
+Widgets:
+- Live network traffic graph
+- Threat heatmap
+- World map with attack origins
+- Active malicious IP table
+- DNS requests monitor
+- Packet inspection logs
+- Threat severity pie chart
+- Real-time attack timeline
+
+Animations:
+- Live updating charts
+- Pulsing threat indicators
+- Terminal-style logs
+
+Include:
+- Filtering options
+- Search functionality
+- Export logs button
+
+====================================================
+3. URL SANDBOX ANALYZER PAGE
+====================================================
+
+Main functionality:
+User submits suspicious URL.
+
+UI:
+- Large futuristic input box
+- Analyze button with loading animation
+
+When analyzing:
+Show animated scanning process:
+- DNS lookup
+- SSL inspection
+- Redirect tracing
+- Script behavior analysis
+- Credential harvesting detection
+- Malware detection
+
+Results page should show:
+- Threat score meter
+- Suspicious indicators
+- Redirect chains
+- Detected trackers
+- JavaScript behavior
+- Screenshot preview of analyzed site
+- Network requests generated
+- AI-generated explanation
+
+Add:
+- Attack replay timeline
+- Risk breakdown chart
+- Recommendation panel
+
+====================================================
+4. QR SCAM DETECTOR PAGE
+====================================================
+
+Features:
+- Upload QR image
+- Camera scanner UI
+- Extract embedded URL
+- Analyze payment scams
+- Detect fake UPI IDs
+
+UI:
+- Drag-and-drop upload zone
+- Animated scan effect
+- Neon scanning line animation
+
+Results:
+- QR content
+- Redirect chain
+- Domain trust score
+- Scam probability
+- Payment risk alerts
+
+Add:
+- Example scam QR gallery
+- Safety tips section
+
+====================================================
+5. THREAT INTELLIGENCE CENTER
+====================================================
+
+Purpose:
+Display collected threat intelligence data.
+
+Sections:
+- Malicious domains database
+- Suspicious IP tracker
+- Phishing campaign clusters
+- Related attack graph visualization
+- Domain age analysis
+- Certificate reuse analysis
+
+Add:
+Interactive graph:
+- Nodes connected by attack relationships
+
+Include:
+- Search
+- Filtering
+- Severity categories
+- Timeline view
+
+====================================================
+6. COMMUNITY REPORTS PAGE
+====================================================
+
+Purpose:
+Crowdsourced phishing/scam reporting.
+
+Features:
+- Submit scam reports
+- Upload screenshots
+- Report malicious links
+- Community voting system
+
+UI:
+- Reddit/forum inspired layout
+- Cybersecurity community theme
+
+Add:
+- Trending scams
+- Most reported domains
+- Recently blocked attacks
+
+====================================================
+7. ADMIN ANALYTICS PANEL
+====================================================
+
+Purpose:
+Advanced admin control dashboard.
+
+Features:
+- User analytics
+- Threat statistics
+- Scan history
+- API usage graphs
+- Most dangerous domains
+- Detection accuracy
+- Server health monitoring
+
+Include:
+- Tables
+- Interactive charts
+- Monitoring widgets
+- Activity logs
+
+Design:
+Professional SOC/NOC control room feel.
+
+====================================================
+8. ABOUT PROJECT PAGE
+====================================================
+
+Sections:
+- Problem statement
+- Why phishing attacks matter
+- Architecture explanation
+- Technologies used
+- Security workflow
+- Future scope
+- Research applications
+
+Add:
+- Animated tech stack icons
+- System architecture diagrams
+- Developer profiles
+
+====================================================
+9. CONTACT / FEEDBACK PAGE
+====================================================
+
+Features:
+- Contact form
+- Feedback submission
+- Bug reporting
+- Feature requests
+
+Design:
+- Futuristic contact cards
+- Animated inputs
+- Map section
+- Social media links
+
+====================================================
+EXTRA CREATIVE FEATURES
+====================================================
+
+Add:
+- Terminal simulation mode
+- AI chatbot assistant
+- Hacker-style loading screens
+- Floating cyber animations
+- Matrix-style background effects
+- Animated scan pulses
+- Real-time fake cybersecurity alerts
+
+====================================================
+TECHNICAL REQUIREMENTS
+====================================================
+
+Frontend:
+- React
+- Tailwind CSS
+- Framer Motion
+- Recharts or Chart.js
+
+Backend:
+- Node.js or FastAPI
+
+Use:
+- Modular component architecture
+- Clean reusable UI components
+- Responsive layouts
+- API-ready structure
+
+====================================================
+IMPORTANT
+====================================================
+
+The website should NOT look like a college project.
+
+It should look like:
+- a funded cybersecurity startup,
+- enterprise threat intelligence platform,
+- or modern SOC dashboard.
+
+Prioritize:
+- creativity,
+- premium UI,
+- futuristic visuals,
+- interactivity,
+- polished animations,
+- realistic cybersecurity aesthetics.
