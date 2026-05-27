@@ -21,11 +21,9 @@ export function LoadingScreen() {
       { t: "SYSTEM READY.", delay: 3000 },
     ];
 
-    let currentTimeout: ReturnType<typeof setTimeout>;
-
-    steps.forEach((step) => {
-      setTimeout(() => setText(step.t), step.delay);
-    });
+    const stepTimeouts: ReturnType<typeof setTimeout>[] = steps.map((step) =>
+      setTimeout(() => setText(step.t), step.delay)
+    );
 
     const progressInterval = setInterval(() => {
       setProgress(p => {
@@ -43,7 +41,7 @@ export function LoadingScreen() {
     }, 3500);
 
     return () => {
-      steps.forEach(s => clearTimeout(currentTimeout));
+      stepTimeouts.forEach(t => clearTimeout(t));
       clearInterval(progressInterval);
       clearTimeout(finishTimeout);
     };

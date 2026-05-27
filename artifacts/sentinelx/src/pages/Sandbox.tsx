@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Loader2, CheckCircle2, ShieldAlert, ArrowRight, AlertTriangle, Shield, Wifi } from "lucide-react";
+import { Search, Loader2, CheckCircle2, ShieldAlert, ArrowRight, AlertTriangle, Shield, Wifi, Cpu } from "lucide-react";
 import { ThreatScoreGauge } from "@/components/ui/ThreatScoreGauge";
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { MemoryVisualizer } from "@/components/sandbox/MemoryVisualizer";
+import { VoiceNarrator } from "@/components/ai/VoiceNarrator";
+import { useThreatLevel } from "@/contexts/ThreatLevelContext";
 
 const SAMPLE_URLS = [
   "http://secure-login-paypal-verify.com",
@@ -42,6 +45,12 @@ export default function Sandbox() {
   const [scanProgress, setScanProgress] = useState(0);
   const [results, setResults] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showMemory, setShowMemory] = useState(true);
+  const { setThreatLevel } = useThreatLevel();
+
+  useEffect(() => {
+    return () => setThreatLevel(0);
+  }, [setThreatLevel]);
 
   const handleScan = async (targetUrl: string) => {
     if (!targetUrl) return;
@@ -50,8 +59,9 @@ export default function Sandbox() {
     setResults(null);
     setError(null);
     setScanProgress(0);
+    setThreatLevel(0);
+    setShowMemory(true);
 
-    // Animate scan steps while waiting for the API
     let step = 0;
     const stepInterval = setInterval(() => {
       step += 1;
@@ -75,9 +85,9 @@ export default function Sandbox() {
       }
 
       const data = await res.json() as AnalysisResult;
-      // Small pause so the final step visually completes
       await new Promise((r) => setTimeout(r, 400));
       setResults(data);
+      setThreatLevel(data.score >= 70 ? 3 : data.score >= 35 ? 2 : 0);
     } catch (err) {
       clearInterval(stepInterval);
       setScanProgress(0);
@@ -102,7 +112,7 @@ export default function Sandbox() {
         </div>
 
         {!results && (
-          <Card className="bg-card/40 backdrop-blur-md border-primary/20 shadow-[0_0_30px_rgba(0,245,255,0.05)] overflow-hidden">
+          <Card className="bg-card/40 backdrop-blur-md border-primary/20 shadow-[0_0_30px_rgba(0,245,255,0.05)] overflow-hidden mb-6">
             <CardContent className="p-8 relative">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50" />
               <div className="flex flex-col md:flex-row gap-4 mb-6">
@@ -177,14 +187,35 @@ export default function Sandbox() {
           </Card>
         )}
 
+        {(isScanning || results) && showMemory && (
+          <div className="mb-6">
+            <MemoryVisualizer
+              isScanning={isScanning}
+              isComplete={!isScanning && !!results}
+              threatScore={results?.score ?? 0}
+              indicators={results?.indicators ?? []}
+            />
+          </div>
+        )}
+
         {results && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <VoiceNarrator results={results} score={results.score} />
+
             <div className="flex flex-wrap justify-between items-center gap-4">
               <div>
                 <p className="text-xs text-muted-foreground font-mono mb-1">Analyzed URL</p>
                 <h2 className="text-lg font-bold font-mono text-white truncate max-w-2xl">{url}</h2>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 flex-wrap">
+                <button
+                  data-testid="button-toggle-memory"
+                  onClick={() => setShowMemory(v => !v)}
+                  className="flex items-center gap-1.5 text-xs font-mono px-3 py-1 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-muted-foreground transition-colors"
+                >
+                  <Cpu className="w-3 h-3" />
+                  {showMemory ? "Hide" : "Show"} Memory View
+                </button>
                 <div className={`flex items-center gap-1.5 text-xs font-mono px-3 py-1 rounded-full border ${results.hasSSL ? "border-green-500/30 bg-green-500/10 text-green-400" : "border-destructive/30 bg-destructive/10 text-destructive"}`}>
                   {results.hasSSL ? <Shield className="w-3 h-3" /> : <AlertTriangle className="w-3 h-3" />}
                   {results.hasSSL ? "SSL Verified" : "No SSL"}
@@ -198,7 +229,7 @@ export default function Sandbox() {
                     HTTP {results.statusCode}
                   </div>
                 )}
-                <Button data-testid="button-scan-another" variant="outline" onClick={() => { setResults(null); setUrl(""); setError(null); }}>
+                <Button data-testid="button-scan-another" variant="outline" onClick={() => { setResults(null); setUrl(""); setError(null); setThreatLevel(0); }}>
                   Scan Another URL
                 </Button>
               </div>

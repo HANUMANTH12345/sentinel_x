@@ -31,7 +31,7 @@ export default function About() {
         <section className="mb-16 grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             { title: "$4.8B", desc: "Annual losses to phishing", icon: Shield },
-            { title: "27 Days", desc: "Average time to discover a breach", icon: Clock => <BrainCircuit {...Clock} /> },
+            { title: "27 Days", desc: "Average time to discover a breach", icon: BrainCircuit },
             { title: "90%", desc: "Attacks start with phishing", icon: Network }
           ].map((item, i) => (
             <Card key={i} className="bg-card/30 border-white/10 text-center hover:border-primary/50 transition-colors">

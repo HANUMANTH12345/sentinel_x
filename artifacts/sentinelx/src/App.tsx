@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 
 import Landing from "@/pages/Landing";
 import Dashboard from "@/pages/Dashboard";
@@ -19,6 +19,10 @@ import ScanHistory from "@/pages/History";
 import { ChatBot } from "@/components/chatbot/ChatBot";
 import { LoadingScreen } from "@/components/loading/LoadingScreen";
 import { ThreatAlerts } from "@/components/ui/ThreatAlerts";
+import { ThreatLevelProvider } from "@/contexts/ThreatLevelContext";
+import { CyberStorm } from "@/components/background/CyberStorm";
+
+const ThreatUniverse = lazy(() => import("@/pages/ThreatUniverse"));
 
 const queryClient = new QueryClient();
 
@@ -30,6 +34,13 @@ function Router() {
       <Route path="/sandbox" component={Sandbox} />
       <Route path="/qr" component={QrDetector} />
       <Route path="/intelligence" component={Intelligence} />
+      <Route path="/universe">
+        {() => (
+          <Suspense fallback={<div className="flex items-center justify-center h-screen text-primary font-mono text-sm animate-pulse">LOADING THREAT UNIVERSE...</div>}>
+            <ThreatUniverse />
+          </Suspense>
+        )}
+      </Route>
       <Route path="/community" component={Community} />
       <Route path="/admin" component={Admin} />
       <Route path="/about" component={About} />
@@ -48,13 +59,16 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-          <LoadingScreen />
-          <Router />
-          <ChatBot />
-          <ThreatAlerts />
-        </WouterRouter>
-        <Toaster />
+        <ThreatLevelProvider>
+          <CyberStorm />
+          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+            <LoadingScreen />
+            <Router />
+            <ChatBot />
+            <ThreatAlerts />
+          </WouterRouter>
+          <Toaster />
+        </ThreatLevelProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );

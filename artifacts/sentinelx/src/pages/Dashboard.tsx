@@ -4,21 +4,24 @@ import { Activity, ShieldAlert, Zap, Target, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LineChart, Line, AreaChart, Area, PieChart, Pie, Cell, ResponsiveContainer, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
 import { useState, useEffect } from "react";
+import { useThreatLevel } from "@/contexts/ThreatLevelContext";
 
 const PIE_COLORS = ['#ef4444', '#f97316', '#eab308', '#3b82f6'];
 
 export default function Dashboard() {
   const [trafficData, setTrafficData] = useState(Array.from({length: 20}, (_, i) => ({ time: i, value: Math.floor(Math.random() * 1000) })));
+  const { setThreatLevel } = useThreatLevel();
   
   useEffect(() => {
+    setThreatLevel(2);
     const interval = setInterval(() => {
       setTrafficData(prev => {
         const newData = [...prev.slice(1), { time: prev[prev.length-1].time + 1, value: Math.floor(Math.random() * 1000) }];
         return newData;
       });
     }, 3000);
-    return () => clearInterval(interval);
-  }, []);
+    return () => { clearInterval(interval); setThreatLevel(0); };
+  }, [setThreatLevel]);
 
   const pieData = [
     { name: 'Critical', value: 400 },
