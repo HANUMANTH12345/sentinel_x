@@ -79,28 +79,7 @@ export default function Landing() {
           </div>
         </section>
 
-        <section className="container mx-auto px-4 py-20">
-          <h2 className="text-3xl font-bold font-display text-center mb-12">Trusted by Elite Analysts</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { name: "Sarah Jenkins", role: "Senior SOC Analyst", quote: "SentinelX completely changed how we handle phishing triage. The automated sandbox saves us hours of manual analysis every day." },
-              { name: "David Chen", role: "Threat Intel Lead", quote: "The global threat feed and AI explanations are terrifyingly accurate. It's like having another senior analyst on the team." },
-              { name: "Marcus Rossi", role: "Red Team Engineer", quote: "I use SentinelX to test my payloads. It catches obfuscation techniques that other enterprise EDRs miss entirely." },
-            ].map((t, i) => (
-              <div key={i} className="p-6 rounded-2xl bg-card border border-border relative">
-                <div className="text-primary text-4xl font-serif absolute top-4 right-6 opacity-20">"</div>
-                <p className="text-muted-foreground mb-6 relative z-10">{t.quote}</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center font-bold text-white border border-white/10">{t.name[0]}</div>
-                  <div>
-                    <div className="font-bold text-sm text-white">{t.name}</div>
-                    <div className="text-xs text-primary font-mono">{t.role}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+
       </main>
 
       <footer className="border-t border-border bg-card/80 backdrop-blur-sm py-12 relative z-10">
