@@ -13,11 +13,13 @@ export interface ScannedNode {
 interface UserScansContextValue {
   scans: ScannedNode[];
   addScan: (scan: Omit<ScannedNode, "id" | "timestamp">) => void;
+  clearScans: () => void;
 }
 
 const UserScansContext = createContext<UserScansContextValue>({
   scans: [],
   addScan: () => {},
+  clearScans: () => {},
 });
 
 export function UserScansProvider({ children }: { children: React.ReactNode }) {
@@ -27,13 +29,14 @@ export function UserScansProvider({ children }: { children: React.ReactNode }) {
     setScans((prev) => {
       const id = `user-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
       const newScan: ScannedNode = { ...scan, id, timestamp: Date.now() };
-      // Keep most recent 20 user scans
       return [newScan, ...prev].slice(0, 20);
     });
   }, []);
 
+  const clearScans = useCallback(() => setScans([]), []);
+
   return (
-    <UserScansContext.Provider value={{ scans, addScan }}>
+    <UserScansContext.Provider value={{ scans, addScan, clearScans }}>
       {children}
     </UserScansContext.Provider>
   );

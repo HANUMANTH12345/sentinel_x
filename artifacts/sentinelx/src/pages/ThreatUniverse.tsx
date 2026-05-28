@@ -4,7 +4,7 @@ import { OrbitControls, Stars, Billboard, Text, Line } from "@react-three/drei";
 import * as THREE from "three";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Link } from "wouter";
-import { Search, X, ExternalLink, Globe2, AlertTriangle, Info, Wifi } from "lucide-react";
+import { Search, X, ExternalLink, Globe2, AlertTriangle, Info, Wifi, RotateCcw } from "lucide-react";
 import { useThreatLevel } from "@/contexts/ThreatLevelContext";
 import { useUserScans } from "@/contexts/UserScansContext";
 
@@ -473,7 +473,7 @@ export default function ThreatUniverse() {
   const [search, setSearch] = useState("");
   const [hasWebGL, setHasWebGL] = useState<boolean | null>(null);
   const { setThreatLevel } = useThreatLevel();
-  const { scans } = useUserScans();
+  const { scans, clearScans } = useUserScans();
 
   const staticNodes = useMemo(() => generateNodes(), []);
 
@@ -533,6 +533,17 @@ export default function ThreatUniverse() {
             <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-white/40 inline-block" /><span className="text-white/50">{nodes.length} nodes</span></div>
             <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-red-500 inline-block" /><span className="text-red-400">{criticalCount} critical</span></div>
             <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-orange-500 inline-block" /><span className="text-orange-400">{highCount} high</span></div>
+            {userNodes.length > 0 && (
+              <button
+                onClick={() => { clearScans(); setSelectedId(null); }}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded border border-white/10 hover:border-red-500/40 hover:bg-red-500/10 text-white/40 hover:text-red-400 transition-all duration-200"
+                title="Remove your scanned nodes from the universe"
+              >
+                <RotateCcw className="w-3 h-3" />
+                <span>Reset</span>
+                <span className="text-white/25">({userNodes.length})</span>
+              </button>
+            )}
           </div>
           <div className="pointer-events-auto hidden lg:flex items-center gap-3 font-mono text-[10px] text-white/30">
             {(["critical", "high", "medium", "info"] as const).map(t => (
