@@ -6,6 +6,7 @@ import { Sidebar } from "@/components/layout/Sidebar";
 import { Link } from "wouter";
 import { Search, X, ExternalLink, Globe2, AlertTriangle, Info, Wifi } from "lucide-react";
 import { useThreatLevel } from "@/contexts/ThreatLevelContext";
+import { useUserScans } from "@/contexts/UserScansContext";
 
 // ─── Data ──────────────────────────────────────────────────────────────────────
 
@@ -472,9 +473,43 @@ export default function ThreatUniverse() {
   const [search, setSearch] = useState("");
   const [hasWebGL, setHasWebGL] = useState<boolean | null>(null);
   const { setThreatLevel } = useThreatLevel();
+  const { scans } = useUserScans();
 
-  const nodes = useMemo(() => generateNodes(), []);
-  const selectedNode = selectedId !== null ? nodes[selectedId] : null;
+  const staticNodes = useMemo(() => generateNodes(), []);
+
+  const userNodes = useMemo<ThreatNode[]>(() => {
+    const base = staticNodes.length;
+    return scans.map((scan, i) => {
+      const seed = (scan.timestamp % 1000) / 1000;
+      const phi = Math.acos(-1 + seed * 2);
+      const theta = (i + seed) * 2.4;
+      const r = 24 + (i % 4) * 2;
+      const threat: ThreatNode["threat"] =
+        scan.score >= 70 ? "critical" : scan.score >= 50 ? "high" : scan.score >= 30 ? "medium" : "info";
+      return {
+        id: base + i,
+        name: scan.url,
+        type: "domain" as const,
+        threat,
+        score: scan.score,
+        position: [
+          r * Math.sin(phi) * Math.cos(theta),
+          r * Math.sin(phi) * Math.sin(theta),
+          r * Math.cos(phi),
+        ] as [number, number, number],
+        radius: 0.55,
+        country: "Scanned by You",
+        hostingProvider: scan.hasSSL ? "SSL Verified" : "No SSL",
+        malwareFamilies: scan.indicators.slice(0, 2),
+        connectedNodes: [],
+        sslReuse: !scan.hasSSL,
+        campaigns: ["Live User Scan"],
+      };
+    });
+  }, [scans, staticNodes.length]);
+
+  const nodes = useMemo(() => [...staticNodes, ...userNodes], [staticNodes, userNodes]);
+  const selectedNode = selectedId !== null ? nodes.find(n => n.id === selectedId) ?? null : null;
   const criticalCount = nodes.filter(n => n.threat === "critical").length;
   const highCount = nodes.filter(n => n.threat === "high").length;
 

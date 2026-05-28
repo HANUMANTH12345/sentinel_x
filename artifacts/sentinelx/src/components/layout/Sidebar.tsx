@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { Shield, LayoutDashboard, Search, QrCode, Globe, Globe2, Users, Settings, Info, Mail, History } from "lucide-react";
+import { Shield, LayoutDashboard, Search, QrCode, Globe, Globe2, Map, Users, Settings, Info, Mail, History } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { href: "/qr", label: "QR Detector", icon: QrCode },
   { href: "/intelligence", label: "Threat Intel", icon: Globe },
   { href: "/universe", label: "Threat Universe", icon: Globe2 },
+  { href: "/threatmap", label: "Threat Map", icon: Map },
   { href: "/community", label: "Community", icon: Users },
   { href: "/history", label: "Scan History", icon: History },
   { href: "/admin", label: "Admin Panel", icon: Settings },

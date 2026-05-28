@@ -9,6 +9,7 @@ import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { MemoryVisualizer } from "@/components/sandbox/MemoryVisualizer";
 import { VoiceNarrator } from "@/components/ai/VoiceNarrator";
 import { useThreatLevel } from "@/contexts/ThreatLevelContext";
+import { useUserScans } from "@/contexts/UserScansContext";
 
 const SAMPLE_URLS = [
   "http://secure-login-paypal-verify.com",
@@ -47,6 +48,7 @@ export default function Sandbox() {
   const [error, setError] = useState<string | null>(null);
   const [showMemory, setShowMemory] = useState(true);
   const { setThreatLevel } = useThreatLevel();
+  const { addScan } = useUserScans();
 
   useEffect(() => {
     return () => setThreatLevel(0);
@@ -88,6 +90,7 @@ export default function Sandbox() {
       await new Promise((r) => setTimeout(r, 400));
       setResults(data);
       setThreatLevel(data.score >= 70 ? 3 : data.score >= 35 ? 2 : 0);
+      addScan({ url: targetUrl, score: data.score, indicators: data.indicators, chain: data.chain, hasSSL: data.hasSSL });
     } catch (err) {
       clearInterval(stepInterval);
       setScanProgress(0);

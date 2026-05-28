@@ -21,8 +21,10 @@ import { LoadingScreen } from "@/components/loading/LoadingScreen";
 import { ThreatAlerts } from "@/components/ui/ThreatAlerts";
 import { ThreatLevelProvider } from "@/contexts/ThreatLevelContext";
 import { CyberStorm } from "@/components/background/CyberStorm";
+import { UserScansProvider } from "@/contexts/UserScansContext";
 
 const ThreatUniverse = lazy(() => import("@/pages/ThreatUniverse"));
+const ThreatMap = lazy(() => import("@/pages/ThreatMap"));
 
 const queryClient = new QueryClient();
 
@@ -46,6 +48,13 @@ function Router() {
       <Route path="/about" component={About} />
       <Route path="/contact" component={Contact} />
       <Route path="/history" component={ScanHistory} />
+      <Route path="/threatmap">
+        {() => (
+          <Suspense fallback={<div className="flex items-center justify-center h-screen text-primary font-mono text-sm animate-pulse">LOADING THREAT MAP...</div>}>
+            <ThreatMap />
+          </Suspense>
+        )}
+      </Route>
       <Route component={NotFound} />
     </Switch>
   );
@@ -60,14 +69,16 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <ThreatLevelProvider>
-          <CyberStorm />
-          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-            <LoadingScreen />
-            <Router />
-            <ChatBot />
-            <ThreatAlerts />
-          </WouterRouter>
-          <Toaster />
+          <UserScansProvider>
+            <CyberStorm />
+            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+              <LoadingScreen />
+              <Router />
+              <ChatBot />
+              <ThreatAlerts />
+            </WouterRouter>
+            <Toaster />
+          </UserScansProvider>
         </ThreatLevelProvider>
       </TooltipProvider>
     </QueryClientProvider>
