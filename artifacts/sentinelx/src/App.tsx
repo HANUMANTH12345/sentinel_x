@@ -25,6 +25,8 @@ import { UserScansProvider } from "@/contexts/UserScansContext";
 
 const ThreatUniverse = lazy(() => import("@/pages/ThreatUniverse"));
 const ThreatMap = lazy(() => import("@/pages/ThreatMap"));
+const BulkScanner = lazy(() => import("@/pages/BulkScanner"));
+const BrowserScan = lazy(() => import("@/pages/BrowserScan"));
 
 const queryClient = new QueryClient();
 
@@ -52,6 +54,20 @@ function Router() {
         {() => (
           <Suspense fallback={<div className="flex items-center justify-center h-screen text-primary font-mono text-sm animate-pulse">LOADING THREAT MAP...</div>}>
             <ThreatMap />
+          </Suspense>
+        )}
+      </Route>
+      <Route path="/bulk">
+        {() => (
+          <Suspense fallback={<div className="flex items-center justify-center h-screen text-primary font-mono text-sm animate-pulse">LOADING...</div>}>
+            <BulkScanner />
+          </Suspense>
+        )}
+      </Route>
+      <Route path="/browserscan">
+        {() => (
+          <Suspense fallback={<div className="flex items-center justify-center h-screen text-primary font-mono text-sm animate-pulse">LOADING...</div>}>
+            <BrowserScan />
           </Suspense>
         )}
       </Route>

@@ -10,6 +10,7 @@ import { MemoryVisualizer } from "@/components/sandbox/MemoryVisualizer";
 import { VoiceNarrator } from "@/components/ai/VoiceNarrator";
 import { useThreatLevel } from "@/contexts/ThreatLevelContext";
 import { useUserScans } from "@/contexts/UserScansContext";
+import { DomainRepCard } from "@/components/sandbox/DomainRepCard";
 
 const SAMPLE_URLS = [
   "http://secure-login-paypal-verify.com",
@@ -275,6 +276,8 @@ export default function Sandbox() {
                 )}
               </Card>
             )}
+
+            <DomainRepCard url={url} />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card className="bg-card/50 border-white/10 p-6">
