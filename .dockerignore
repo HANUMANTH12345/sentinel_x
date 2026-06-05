@@ -1,0 +1,10 @@
+node_modules
+**/node_modules
+dist
+**/dist
+.git
+.gitignore
+.vscode
+Dockerfile*
+docker-compose*.yml
+docker-compose*.yaml

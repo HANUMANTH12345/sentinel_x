@@ -100,6 +100,13 @@ async function buildAll() {
       "puppeteer",
       "puppeteer-core",
       "electron",
+      // Externalize DB and schema libraries that are resolved at runtime
+      "pg",
+      "zod",
+      "drizzle-orm/*",
+      "drizzle-zod",
+      "drizzle-orm/node-postgres",
+      "drizzle-orm/pg-core",
     ],
     sourcemap: "linked",
     plugins: [

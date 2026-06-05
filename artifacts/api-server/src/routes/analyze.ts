@@ -22,20 +22,23 @@ router.post("/analyze-url", async (req, res) => {
   }
 
   const result = await analyzeUrl(parsed.href);
+  console.log("SCAN SCORE:", result.score);
 
   // Persist to DB (non-blocking)
-  db.insert(urlScansTable).values({
-    url: parsed.href,
-    score: result.score,
-    indicators: result.indicators,
-    chain: result.chain,
-    breakdown: result.breakdown,
-    aiText: result.aiText,
-    trackers: result.trackers,
-    hasSSL: result.hasSSL,
-    hasHSTS: result.hasHSTS,
-    statusCode: result.statusCode,
-  }).catch(() => {});
+db.insert(urlScansTable).values({
+  url: parsed.href,
+  score: result.score,
+  indicators: result.indicators,
+  chain: result.chain,
+  breakdown: result.breakdown,
+  aiText: result.aiText,
+  trackers: result.trackers,
+  hasSSL: result.hasSSL,
+  hasHSTS: result.hasHSTS,
+  statusCode: result.statusCode,
+})
+.then(() => console.log("SCAN SAVED"))
+.catch((err) => console.error("SCAN SAVE FAILED:", err));
 
   res.json(result);
 });

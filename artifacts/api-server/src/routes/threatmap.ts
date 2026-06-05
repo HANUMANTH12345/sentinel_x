@@ -95,6 +95,12 @@ router.get("/threatmap", async (req, res) => {
     db.select().from(communityReportsTable).orderBy(sql`${communityReportsTable.createdAt} desc`).limit(limit / 2),
   ]);
 
+  console.log("URL SCANS FOUND:", urlScans.length);
+
+if (urlScans.length > 0) {
+  console.log("FIRST URL SCAN:", urlScans[0]);
+}
+
   const events: object[] = [];
 
   urlScans.forEach((scan, i) => {
@@ -143,7 +149,7 @@ router.get("/threatmap", async (req, res) => {
   });
 
   // If DB is empty (dev/demo), seed with simulated events so the map looks alive
-  if (events.length === 0) {
+ /* if (events.length === 0) {
     const DEMO_ATTACKS = [
       { url: "secure-login-paypal.ru", score: 89, type: "phishing" },
       { url: "verify-account-amazon.xyz", score: 82, type: "credential_theft" },
@@ -174,7 +180,7 @@ router.get("/threatmap", async (req, res) => {
         origin: "demo",
       });
     });
-  }
+  }*/
 
   events.sort((a: Record<string, unknown>, b: Record<string, unknown>) =>
     new Date(b.timestamp as string).getTime() - new Date(a.timestamp as string).getTime()

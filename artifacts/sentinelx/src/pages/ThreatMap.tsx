@@ -74,6 +74,7 @@ interface Arc {
 }
 
 export default function ThreatMap() {
+  const [isReset, setIsReset] = useState(false);
   const [events, setEvents] = useState<ThreatEvent[]>([]);
   const [arcs, setArcs] = useState<Arc[]>([]);
   const [total, setTotal] = useState(0);
@@ -84,6 +85,7 @@ export default function ThreatMap() {
   const { setThreatLevel } = useThreatLevel();
 
   const fetchData = async () => {
+    if (isReset) return;
     try {
       const res = await fetch("/api/threatmap");
       if (!res.ok) return;
@@ -161,12 +163,30 @@ export default function ThreatMap() {
             </div>
             <button
               data-testid="button-refresh-threatmap"
-              onClick={fetchData}
+              onClick={() => {
+  setIsReset(false);
+  fetchData();
+}}
               className="flex items-center gap-1.5 px-2 py-1 rounded border border-white/10 hover:bg-white/10 transition-colors text-white/40 hover:text-white"
             >
               <RefreshCw className="w-3 h-3" />
               <span>Refresh</span>
             </button>
+            <button
+  data-testid="button-reset-threatmap"
+ onClick={() => {
+  setIsReset(true);
+  setEvents([]);
+  setArcs([]);
+  setTotal(0);
+  setHoveredEvent(null);
+  setThreatLevel(0);
+  setLastUpdate(new Date());
+}}
+  className="flex items-center gap-1.5 px-2 py-1 rounded border border-red-500/20 hover:bg-red-500/10 transition-colors text-red-400"
+>
+  <span>Reset</span>
+</button>
           </div>
         </div>
 
