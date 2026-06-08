@@ -4,9 +4,10 @@ services:
     environment:
       POSTGRES_USER: dev
       POSTGRES_PASSWORD: pass
-      POSTGRES_DB: cdh
+      POSTGRES_DB: dev
     ports:
       - "55432:5432"
+
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -27,17 +28,18 @@ services:
       PORT: 4173
       BASE_PATH: /
       NODE_ENV: development
-      DATABASE_URL: postgres://dev:pass@postgres:5432/cdh
+      DATABASE_URL: postgres://dev:pass@postgres:5432/dev
     ports:
       - "4173:4173"
       - "5000:5000"
+
     volumes:
       - .:/app
       - frontend_node_modules:/app/node_modules
       - frontend_sentinelx_node_modules:/app/artifacts/sentinelx/node_modules
       - api_server_node_modules:/app/artifacts/api-server/node_modules
       - frontend_pnpm_store:/pnpm/store
-    command: sh -lc "pnpm install && (PORT=5000 DATABASE_URL=postgres://dev:pass@postgres:5432/cdh pnpm --filter @workspace/api-server run dev > /tmp/api-server.log 2>&1 &) && PORT=4173 pnpm --filter @workspace/sentinelx run dev"
+    command: sh -lc "pnpm install && (PORT=5000 DATABASE_URL=postgres://dev:pass@postgres:5432/dev pnpm --filter @workspace/api-server run dev > /tmp/api-server.log 2>&1 &) && PORT=4173 pnpm --filter @workspace/sentinelx run dev"
 
 volumes:
   frontend_node_modules:
