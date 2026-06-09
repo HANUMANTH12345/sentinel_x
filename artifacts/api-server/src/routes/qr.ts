@@ -1,3 +1,4 @@
+import dns from "dns/promises";
 import { Router, Request, Response } from "express";
 import multer from "multer";
 import { analyzeUrl } from "../lib/url-analyzer.js";
@@ -64,18 +65,48 @@ router.post("/analyze-qr", upload.single("image"), async (req: Request, res: Res
   }
 
   const analysis = await analyzeUrl(targetUrl);
+  let sourceIp: string | null = null;
+let sourceCountry: string | null = null;
+let sourceCity: string | null = null;
+let sourceLat: string | null = null;
+let sourceLon: string | null = null;
+
+try {
+  const hostname = new URL(targetUrl).hostname;
+  const { address } = await dns.lookup(hostname);
+
+  sourceIp = address;
+
+  const response = await fetch(`http://ip-api.com/json/${address}`);
+  const geo: any = await response.json();
+
+  if (geo?.status === "success") {
+    sourceCountry = geo.country ?? null;
+    sourceCity = geo.city ?? null;
+    sourceLat = String(geo.lat);
+    sourceLon = String(geo.lon);
+  }
+} catch (err) {
+  console.error("QR Geo lookup failed:", err);
+}
   const scamProbability = Math.min(Math.round(analysis.score * 1.05), 99);
 
   // Persist to DB
   db.insert(qrScansTable).values({
-    extractedUrl: targetUrl,
-    rawContent: extractedContent,
-    score: analysis.score,
-    indicators: analysis.indicators,
-    aiText: analysis.aiText,
-    scamProbability,
-    hasSSL: analysis.hasSSL,
-  }).catch(() => {});
+  extractedUrl: targetUrl,
+  rawContent: extractedContent,
+  score: analysis.score,
+  indicators: analysis.indicators,
+  aiText: analysis.aiText,
+  scamProbability,
+  hasSSL: analysis.hasSSL,
+
+  sourceIp,
+  sourceCountry,
+  sourceCity,
+  sourceLat,
+  sourceLon,
+}).catch(() => {});
 
   res.json({
     rawContent: extractedContent,

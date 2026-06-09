@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "drizzle-zod": "^0.8.3",
+    "geoip-lite": "^2.0.2",
     "pg": "^8.20.0"
   }
 }

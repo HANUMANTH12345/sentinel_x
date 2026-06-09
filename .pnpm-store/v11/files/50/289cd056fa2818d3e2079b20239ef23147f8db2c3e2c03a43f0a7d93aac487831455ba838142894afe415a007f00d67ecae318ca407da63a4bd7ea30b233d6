@@ -1,0 +1,53 @@
+import { IValue, _IIndex, _ISelection, _IType, _Transaction, _Explainer, _ExprExplanation, _ISchema } from './interfaces-private';
+import { nil } from './interfaces';
+import { QName } from 'pgsql-ast-parser';
+export declare class Evaluator<T = any> implements IValue<T> {
+    readonly owner: _ISchema;
+    readonly type: _IType<T>;
+    readonly id: string | nil;
+    readonly hash: string;
+    val: nil | Object | number | string | Date | ((raw: any, transaction: _Transaction | nil) => any);
+    private opts?;
+    readonly isConstantLiteral: boolean;
+    readonly usedColumns: Set<IValue<any>>;
+    readonly forceNotConstant?: boolean;
+    get index(): _IIndex | nil;
+    get isConstant(): boolean;
+    get isConstantReal(): boolean;
+    origin: _ISelection | nil;
+    get isAny(): boolean;
+    constructor(owner: _ISchema, type: _IType<T>, id: string | nil, hash: string, dependencies: IValue | IValue[] | nil, val: nil | Object | number | string | Date | ((raw: any, transaction: _Transaction | nil) => any), opts?: {
+        isAny?: boolean | undefined;
+        isColumnOf?: _ISelection<any> | undefined;
+        forceNotConstant?: boolean | undefined;
+        unpure?: boolean | undefined;
+    } | undefined);
+    setType(type: _IType): Evaluator<T>;
+    setConversion(converter: (val: T, t: _Transaction | nil) => any, hashConv: (hash: string) => any): Evaluator<T>;
+    setOrigin(origin: _ISelection): IValue<T>;
+    clone(): Evaluator<T>;
+    setWrapper(newOrigin: _ISelection, unwrap: (val: any) => any): IValue<T>;
+    setId(newId: string): IValue;
+    get(): T;
+    get(raw: any, t: _Transaction | nil): T;
+    canConvert(to: _IType<T>): boolean;
+    convert<T = any>(to: _IType<T>): IValue<T>;
+    explain(e: _Explainer): _ExprExplanation;
+}
+export declare function noDefaultsAsNull<T>(fn: () => T): T;
+export declare const Value: {
+    readonly null: (owner: _ISchema, ofType?: _IType<any> | undefined) => IValue;
+    readonly text: (owner: _ISchema, value: string, length?: number | nil) => IValue;
+    readonly number: (owner: _ISchema, value: number, type?: _IType<any>) => IValue;
+    readonly function: (schema: _ISchema, value: string | QName, args: IValue[]) => IValue;
+    readonly bool: (owner: _ISchema, value: boolean) => IValue;
+    /** @deprecated Use with care */
+    readonly constant: (owner: _ISchema, _type: _IType, value: any) => IValue;
+    readonly in: (owner: _ISchema, value: IValue, array: IValue, inclusive: boolean) => IValue;
+    readonly isNull: (owner: _ISchema, leftValue: IValue, expectNull: boolean) => IValue;
+    readonly isTrue: (owner: _ISchema, leftValue: IValue, expectTrue: boolean) => IValue;
+    readonly isFalse: (owner: _ISchema, leftValue: IValue, expectFalse: boolean) => IValue;
+    readonly negate: (value: IValue) => IValue;
+    readonly array: (owner: _ISchema, values: IValue[], list?: boolean) => IValue;
+};
+//# sourceMappingURL=evaluator.d.ts.map

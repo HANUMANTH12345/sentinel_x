@@ -1,3 +1,5 @@
+import dns from "dns/promises";
+//import geoip from "geoip-lite";
 import { Router } from "express";
 import { URL } from "url";
 import { analyzeUrl } from "../lib/url-analyzer.js";
@@ -22,6 +24,29 @@ router.post("/analyze-url", async (req, res) => {
   }
 
   const result = await analyzeUrl(parsed.href);
+  let sourceIp: string | null = null;
+let sourceCountry: string | null = null;
+let sourceCity: string | null = null;
+let sourceLat: number | null = null;
+let sourceLon: number | null = null;
+try {
+  const { address } = await dns.lookup(parsed.hostname);
+
+  sourceIp = address;
+
+  const response = await fetch(`http://ip-api.com/json/${address}`);
+  const geo: any = await response.json();
+
+  if (geo?.status === "success") {
+    sourceCountry = geo.country ?? null;
+    sourceCity = geo.city ?? null;
+    sourceLat = geo.lat ?? null;
+    sourceLon = geo.lon ?? null;
+  }
+} catch (err) {
+  console.error("Geo lookup failed:", err);
+}
+
   console.log("SCAN SCORE:", result.score);
 
   // Persist to DB (non-blocking)
@@ -36,6 +61,12 @@ db.insert(urlScansTable).values({
   hasSSL: result.hasSSL,
   hasHSTS: result.hasHSTS,
   statusCode: result.statusCode,
+
+  sourceIp,
+  sourceCountry,
+  sourceCity,
+  sourceLat,
+  sourceLon,
 })
 .then(() => console.log("SCAN SAVED"))
 .catch((err) => console.error("SCAN SAVE FAILED:", err));

@@ -14,6 +14,11 @@ export const urlScansTable = pgTable("url_scans", {
   hasSSL: boolean("has_ssl").notNull().default(false),
   hasHSTS: boolean("has_hsts").notNull().default(false),
   statusCode: integer("status_code"),
+  sourceIp: text("source_ip"),
+sourceCountry: text("source_country"),
+sourceCity: text("source_city"),
+sourceLat: text("source_lat"),
+sourceLon: text("source_lon"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -26,6 +31,11 @@ export const qrScansTable = pgTable("qr_scans", {
   aiText: text("ai_text").notNull().default(""),
   scamProbability: integer("scam_probability").notNull().default(0),
   hasSSL: boolean("has_ssl").notNull().default(false),
+  sourceIp: text("source_ip"),
+sourceCountry: text("source_country"),
+sourceCity: text("source_city"),
+sourceLat: text("source_lat"),
+sourceLon: text("source_lon"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

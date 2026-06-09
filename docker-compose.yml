@@ -39,7 +39,7 @@ services:
       - frontend_sentinelx_node_modules:/app/artifacts/sentinelx/node_modules
       - api_server_node_modules:/app/artifacts/api-server/node_modules
       - frontend_pnpm_store:/pnpm/store
-    command: sh -lc "pnpm install && (PORT=5000 DATABASE_URL=postgres://dev:pass@postgres:5432/dev pnpm --filter @workspace/api-server run dev > /tmp/api-server.log 2>&1 &) && PORT=4173 pnpm --filter @workspace/sentinelx run dev"
+    command: sh -lc "CI=true pnpm install && (PORT=5000 DATABASE_URL=postgres://dev:pass@postgres:5432/dev pnpm --filter @workspace/api-server run dev > /tmp/api-server.log 2>&1 &) && PORT=4173 pnpm --filter @workspace/sentinelx run dev"
 
 volumes:
   frontend_node_modules:
