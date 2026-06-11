@@ -7,8 +7,10 @@ import contactRouter from "./contact";
 import statsRouter from "./stats";
 import threatmapRouter from "./threatmap";
 import domainrepRouter from "./domainrep";
+import threatIntelRouter from "./threatintel";
 
 const router: IRouter = Router();
+
 
 router.use(healthRouter);
 router.use(analyzeRouter);
@@ -18,5 +20,6 @@ router.use(contactRouter);
 router.use(statsRouter);
 router.use(threatmapRouter);
 router.use(domainrepRouter);
+router.use(threatIntelRouter);
 
 export default router;
